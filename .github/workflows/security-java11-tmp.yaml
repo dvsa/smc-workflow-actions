@@ -2,6 +2,10 @@ name: Reusable Java 11 Security Workflow
 
 on:
   workflow_call:
+    inputs:
+      config_file_contents:
+        required: true
+        type: string
     secrets:
       SNYK_TOKEN:
         required: true
@@ -24,9 +28,6 @@ jobs:
         with:
           distribution: 'corretto'
           java-version: '11'
-
-      - name: Validate Java Version
-        run: java -version
 
       - name: Generate Maven settings.xml file to access GitHub Packages
         uses: whelk-io/maven-settings-xml-action@v21
