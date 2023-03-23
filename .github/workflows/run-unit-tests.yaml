@@ -1,4 +1,4 @@
-name: Reusable Java 11 Security Workflow
+name: Reusable Java 11 Junit Runner Workflow
 
 on:
   workflow_call:
@@ -7,8 +7,6 @@ on:
         required: true
         type: string
     secrets:
-      SNYK_TOKEN:
-        required: true
       USER_NAME:
         required: true
       ACCESS_TOKEN:
@@ -17,7 +15,7 @@ on:
         required: true
 
 jobs:
-  security:
+  run-junit-tests-with-maven:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Project Branch from GitHub
@@ -28,6 +26,7 @@ jobs:
         with:
           distribution: 'corretto'
           java-version: '11'
+          cache: 'maven'
 
       - name: Generate Maven settings.xml file to access GitHub Packages
         uses: whelk-io/maven-settings-xml-action@v21
@@ -61,7 +60,6 @@ jobs:
             [
               "github"
             ]
-
       - name: Generate settings.yaml File Inside Repository
         uses: fertrig/create-file-action@1.0.2
         with:
@@ -70,20 +68,7 @@ jobs:
           content: |
             ${{inputs.config_file_contents}}
 
-      - name: Install SNYK-CLI
+      - name: Run Unit Tests with Maven
         run: |
-          curl -o ./snyk-linux https://static.snyk.io/cli/latest/snyk-linux && \
-          curl -o ./snyk-linux.sha256 https://static.snyk.io/cli/latest/snyk-linux.sha256 && \
-          sha256sum -c snyk-linux.sha256 && \
-          mv snyk-linux /usr/local/bin/snyk && \
-          chmod +x /usr/local/bin/snyk
-
-      - name: Authorise SNYK-CLI
-        run: snyk auth ${{ secrets.SNYK_TOKEN }}
-
-      - name: Run Maven Compile to Download Project Dependencies
-        run: mvn compile -DskipUTs=true
-
-      - name: Run SNYK Monitor
-        run: snyk monitor --org=smc-w53
-
+          aws configure set region eu-west-1
+          mvn clean test
