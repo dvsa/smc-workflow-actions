@@ -67,6 +67,8 @@ jobs:
         with:
           path: 'config'
           file: 'settings.yaml'
+          content: |
+            $config_file_contents
 
       - name: Install SNYK-CLI
         run: |
