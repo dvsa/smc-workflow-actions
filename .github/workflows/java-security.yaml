@@ -1,7 +1,11 @@
-name: Test
+name: Reusable Java 11 Security Workflow
 
 on:
   workflow_call:
+    inputs:
+      config_file_contents:
+        required: true
+        type: string
     secrets:
       SNYK_TOKEN:
         required: true
@@ -19,11 +23,11 @@ jobs:
       - name: Checkout Project Branch from GitHub
         uses: actions/checkout@master
 
-      - name: Install Java Corretto 8
+      - name: Install Java Corretto 11
         uses: actions/setup-java@v3
         with:
           distribution: 'corretto'
-          java-version: '8'
+          java-version: '11'
 
       - name: Generate Maven settings.xml file to access GitHub Packages
         uses: whelk-io/maven-settings-xml-action@v21
@@ -82,4 +86,3 @@ jobs:
 
       - name: Run SNYK Monitor
         run: snyk monitor --org=smc-w53
-
