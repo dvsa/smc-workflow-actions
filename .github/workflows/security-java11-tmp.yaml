@@ -76,7 +76,7 @@ jobs:
           chmod +x /usr/local/bin/snyk
 
       - name: Authorise SNYK-CLI
-        run: snyk auth ${{ secrets.SNYK_TOKEN }}
+        run: snyk auth ${ env.SNYK_TOKEN }
 
       - name: Run Maven Compile to Download Project Dependencies
         env:
