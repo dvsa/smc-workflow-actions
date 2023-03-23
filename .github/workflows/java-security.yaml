@@ -3,7 +3,7 @@ name: Reusable Java 11 Security Workflow
 on:
   workflow_call:
     inputs:
-      config_file_contents:
+      java_version:
         required: true
         type: string
     secrets:
@@ -17,17 +17,17 @@ on:
         required: true
 
 jobs:
-  security:
+  snyk-cli:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Project Branch from GitHub
         uses: actions/checkout@master
 
-      - name: Install Java Corretto 11
+      - name: Install Java Corretto ${{inputs.java_version}}
         uses: actions/setup-java@v3
         with:
           distribution: 'corretto'
-          java-version: '11'
+          java-version: '${{inputs.java_version}}'
 
       - name: Generate Maven settings.xml file to access GitHub Packages
         uses: whelk-io/maven-settings-xml-action@v21
