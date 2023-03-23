@@ -18,7 +18,7 @@ on:
         required: true
 
 jobs:
-  run-junit-tests-with-maven:
+  maven-clean-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Project Branch from GitHub
