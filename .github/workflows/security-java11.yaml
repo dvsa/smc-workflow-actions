@@ -2,6 +2,10 @@ name: Reusable Java 11 Security Workflow
 
 on:
   workflow_call:
+    inputs:
+      config_file_contents:
+        required: true
+        type: string
     secrets:
       SNYK_TOKEN:
         required: true
@@ -25,9 +29,6 @@ jobs:
           distribution: 'corretto'
           java-version: '11'
 
-      - name: Validate Java Version
-        run: java -version
-
       - name: Generate Maven settings.xml file to access GitHub Packages
         uses: whelk-io/maven-settings-xml-action@v21
         with:
@@ -39,7 +40,7 @@ jobs:
               },
               {
                 "id": "github",
-                "url": "${env.PACKAGE_REPO}",
+                "url": "${{secrets.PACKAGE_REPO}}",
                 "releases": {
                   "enabled": "true"
                   },
@@ -52,8 +53,8 @@ jobs:
             [
               {
                 "id": "github",
-                "username": "${env.USER_NAME}",
-                "password": "${env.ACCESS_TOKEN}"
+                "username": "${{secrets.USER_NAME}}",
+                "password": "${{secrets.ACCESS_TOKEN}}"
               }
             ]
           active_profiles: >
@@ -66,6 +67,8 @@ jobs:
         with:
           path: 'config'
           file: 'settings.yaml'
+          content: |
+            ${{inputs.config_file_contents}}
 
       - name: Install SNYK-CLI
         run: |
@@ -79,13 +82,7 @@ jobs:
         run: snyk auth ${{ secrets.SNYK_TOKEN }}
 
       - name: Run Maven Compile to Download Project Dependencies
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-          USER_NAME: ${{ secrets.USER_NAME }}
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          PACKAGE_REPO: ${{ secrets.PACKAGE_REPO }}
         run: mvn compile -DskipUTs=true
 
       - name: Run SNYK Monitor
         run: snyk monitor --org=smc-w53
-
