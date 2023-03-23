@@ -77,7 +77,7 @@ jobs:
 
       - name: echo key
         run: |
-          echo ${env.SNYK_TOKEN}
+          echo "${env.SNYK_TOKEN}"
           echo ${{ secrets.SNYK_TOKEN }}
 
       - name: Authorise SNYK-CLI
