@@ -39,7 +39,7 @@ jobs:
               },
               {
                 "id": "github",
-                "url": "$PACKAGE_REPO",
+                "url": "${{secret.PACKAGE_REPO}}",
                 "releases": {
                   "enabled": "true"
                   },
@@ -52,8 +52,8 @@ jobs:
             [
               {
                 "id": "github",
-                "username": "$USER_NAME",
-                "password": "$ACCESS_TOKEN"
+                "username": "${{secret.USER_NAME}}",
+                "password": "${{secret.ACCESS_TOKEN}}"
               }
             ]
           active_profiles: >
