@@ -3,13 +3,13 @@ name: Reusable Java 11 Security Workflow
 on:
   workflow_call:
     secrets:
-      SNYK_TOKEN:
+      snyk_token:
         required: true
-      USER_NAME:
+      user_name:
         required: true
-      ACCESS_TOKEN:
+      access_token:
         required: true
-      PACKAGE_REPO:
+      package_repo:
         required: true
 
 jobs:
@@ -39,7 +39,7 @@ jobs:
               },
               {
                 "id": "github",
-                "url": "${env.PACKAGE_REPO}",
+                "url": "${secret.package_repo}",
                 "releases": {
                   "enabled": "true"
                   },
@@ -52,8 +52,8 @@ jobs:
             [
               {
                 "id": "github",
-                "username": "${env.USER_NAME}",
-                "password": "${env.ACCESS_TOKEN}"
+                "username": "${secret.user_name}",
+                "password": "${secret.access_token}"
               }
             ]
           active_profiles: >
@@ -75,11 +75,8 @@ jobs:
           mv snyk-linux /usr/local/bin/snyk && \
           chmod +x /usr/local/bin/snyk
 
-      - name: echo key
-        run: echo $SNYK_TOKEN
-
       - name: Authorise SNYK-CLI
-        run: snyk auth $SNYK_TOKEN
+        run: snyk auth ${{ secrets.snyk_token }}
 
       - name: Run Maven Compile to Download Project Dependencies
         env:
@@ -91,4 +88,3 @@ jobs:
 
       - name: Run SNYK Monitor
         run: snyk monitor --org=smc-w53
-
