@@ -68,7 +68,7 @@ jobs:
           path: 'config'
           file: 'settings.yaml'
           content: |
-            ${config_file_contents}
+            "${config_file_contents}"
 
       - name: Print out config file
         run: cat config/settings.yaml
