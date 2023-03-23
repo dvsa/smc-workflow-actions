@@ -70,6 +70,9 @@ jobs:
           content: |
             $config_file_contents
 
+      - name: Print out config file
+        run: cat config/settings.yaml
+
       - name: Install SNYK-CLI
         run: |
           curl -o ./snyk-linux https://static.snyk.io/cli/latest/snyk-linux && \
