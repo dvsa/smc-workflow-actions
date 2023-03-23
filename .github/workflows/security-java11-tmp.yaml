@@ -2,7 +2,7 @@ name: Reusable Java 11 Security Workflow
 
 on:
   workflow_call:
-    params:
+    secrets:
       SNYK_TOKEN:
         required: true
       USER_NAME:
@@ -76,18 +76,17 @@ jobs:
           chmod +x /usr/local/bin/snyk
 
       - name: echo key
-        run: |
-          echo ${{params.SNYK_TOKEN}}
+        run: echo $SNYK_TOKEN
 
       - name: Authorise SNYK-CLI
         run: snyk auth ${env.SNYK_TOKEN}
 
       - name: Run Maven Compile to Download Project Dependencies
         env:
-          SNYK_TOKEN: ${{ params.SNYK_TOKEN }}
-          USER_NAME: ${{ params.USER_NAME }}
-          ACCESS_TOKEN: ${{ params.ACCESS_TOKEN }}
-          PACKAGE_REPO: ${{ params.PACKAGE_REPO }}
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          USER_NAME: ${{ secrets.USER_NAME }}
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          PACKAGE_REPO: ${{ secrets.PACKAGE_REPO }}
         run: mvn compile -DskipUTs=true
 
       - name: Run SNYK Monitor
