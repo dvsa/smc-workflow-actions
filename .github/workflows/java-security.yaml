@@ -6,6 +6,9 @@ on:
       java_version:
         required: true
         type: string
+      snyk_project:
+        required: true
+        type: string
     secrets:
       SNYK_TOKEN:
         required: true
@@ -83,4 +86,4 @@ jobs:
         run: mvn compile -DskipUTs=true
 
       - name: Run SNYK Monitor
-        run: snyk monitor --org=smc-w53
+        run: snyk monitor --org=${{snyk_project}}
