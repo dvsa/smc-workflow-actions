@@ -86,4 +86,4 @@ jobs:
         run: mvn compile -DskipUTs=true
 
       - name: Run SNYK Monitor
-        run: snyk monitor --org=${{snyk_project}}
+        run: snyk monitor --org=${{inputs.snyk_project}}
