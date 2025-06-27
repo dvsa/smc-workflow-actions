@@ -1,0 +1,27 @@
+name: 🚀 Maven Deploy Package
+
+on:
+  push:
+    branches:
+      - develop
+
+permissions:
+  contents: write
+  id-token: write
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tag-release:
+    runs-on: MACOS-ARM64
+
+    steps:
+      - name: 📜 Get Codebase
+        id: get_codebase
+        uses: actions/checkout@v4
+
+      - name: 🚀 Deploy to GitHub Packages
+        run: |
+          mvn clean deploy -DskipUTs=true
