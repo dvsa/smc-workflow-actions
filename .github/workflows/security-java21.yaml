@@ -1,4 +1,4 @@
-name: Reusable Java 11 Security Workflow
+name: Reusable Java 21 Security Workflow
 
 on:
   workflow_call:
