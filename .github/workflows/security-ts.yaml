@@ -34,4 +34,4 @@ jobs:
         run: npm i
 
       - name: Run SNYK Monitor
-        run: snyk monitor --org=${{inputs.snyk_project}}
+        run: snyk monitor --org=smc-w53
