@@ -1,0 +1,44 @@
+name: TypeScript Security Workflow
+
+on:
+  workflow_call:
+    inputs:
+      java_version:
+        required: true
+        type: string
+      snyk_project:
+        required: true
+        type: string
+    secrets:
+      SNYK_TOKEN:
+        required: true
+      USER_NAME:
+        required: true
+      ACCESS_TOKEN:
+        required: true
+      PACKAGE_REPO:
+        required: true
+
+jobs:
+  snyk-cli:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Project Branch from GitHub
+        uses: actions/checkout@master
+
+      - name: Install SNYK-CLI
+        run: |
+          curl -o ./snyk-linux https://static.snyk.io/cli/latest/snyk-linux && \
+          curl -o ./snyk-linux.sha256 https://static.snyk.io/cli/latest/snyk-linux.sha256 && \
+          sha256sum -c snyk-linux.sha256 && \
+          mv snyk-linux /usr/local/bin/snyk && \
+          chmod +x /usr/local/bin/snyk
+
+      - name: Authorise SNYK-CLI
+        run: snyk auth ${{ secrets.SNYK_TOKEN }}
+
+      - name: Run Install to Download Project Dependencies
+        run: npm i
+
+      - name: Run SNYK Monitor
+        run: snyk monitor --org=${{inputs.snyk_project}}
