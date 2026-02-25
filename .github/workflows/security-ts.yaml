@@ -30,8 +30,8 @@ jobs:
       - name: Authorise SNYK-CLI
         run: snyk auth ${{ secrets.SNYK_TOKEN }}
 
-      - name: Run Install to Download Project Dependencies
-        run: npm i
+      - name: Run Install and Build to Download Project Dependencies
+        run: npm i && npm run build -- --package
 
       - name: Run SNYK Monitor
         run: snyk monitor --org=smc-w53
