@@ -2,13 +2,6 @@ name: TypeScript Security Workflow
 
 on:
   workflow_call:
-    inputs:
-      java_version:
-        required: true
-        type: string
-      snyk_project:
-        required: true
-        type: string
     secrets:
       SNYK_TOKEN:
         required: true
